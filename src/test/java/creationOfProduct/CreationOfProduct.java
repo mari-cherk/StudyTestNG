@@ -52,7 +52,7 @@ public class CreationOfProduct {
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("subtab-AdminCatalog")));
         WebElement adminCatalog = driver.findElement(By.id("subtab-AdminCatalog"));
-        WebElement adminProducts = driver.findElement(By.id("subtab-AdminProducts"));
+        WebElement adminProducts = driver.findElement(By.xpath("//*[@id=\"subtab-AdminProducts\"]"));
 
         Actions goToProducts = new Actions(driver);
         goToProducts.moveToElement(adminCatalog).pause(Duration.ofSeconds(5)).click(adminProducts).build().perform();
@@ -85,18 +85,23 @@ public class CreationOfProduct {
         WebElement priceField = driver.findElement(By.id("form_step1_price_shortcut"));
         priceField.clear();
         priceField.sendKeys(priceProductString);
-        WebElement saveProductButton = driver.findElement(By.xpath("//*[@id=\"form\"]/div[4]/div[2]/div/button[1]"));
-        saveProductButton.click();
 
         WebElement swichInput = driver.findElement(By.xpath("//*[@id=\"form\"]/div[4]/div[1]/div"));
         swichInput.click();
-        WebElement configMessage = driver.findElement(By.className("growl growl-notice growl-medium"));
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("growls")));
+        WebElement configMessage = driver.findElement(By.id("growls"));
+        configMessage.click();
+
+        WebElement saveProductButton = driver.findElement(By.xpath("//*[@id=\"submit\"]"));
+        saveProductButton.click();
+
+
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("growls")));
+        configMessage = driver.findElement(By.id("growls"));
         configMessage.click();
 
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("growl growl-notice growl-medium")));
-        configMessage = driver.findElement(By.className("growl growl-notice growl-medium"));
-        configMessage.click();
 
 
     }
@@ -120,10 +125,10 @@ public class CreationOfProduct {
 
     //}
 
-    @AfterTest
-    public void closeBrowser() {
-        driver.quit();
-    }
+    //@AfterTest
+    //public void closeBrowser() {
+        //driver.quit();
+    //}
 
 
     @DataProvider
