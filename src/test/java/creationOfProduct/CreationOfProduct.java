@@ -89,16 +89,16 @@ public class CreationOfProduct {
         WebElement swichInput = driver.findElement(By.xpath("//*[@id=\"form\"]/div[4]/div[1]/div"));
         swichInput.click();
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("growls")));
-        WebElement configMessage = driver.findElement(By.id("growls"));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("growl-close")));
+        WebElement configMessage = driver.findElement(By.className("growl-close"));
         configMessage.click();
 
-        WebElement saveProductButton = driver.findElement(By.xpath("//*[@id=\"submit\"]"));
+        WebElement saveProductButton = driver.findElement(By.xpath("//*[@id=\"form\"]/div[4]/div[2]/div"));
         saveProductButton.click();
 
 
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("growls")));
-        configMessage = driver.findElement(By.id("growls"));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("growl-close")));
+        configMessage = driver.findElement(By.className("growl-close"));
         configMessage.click();
 
 
