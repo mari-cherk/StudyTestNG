@@ -7,6 +7,7 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
@@ -18,7 +19,7 @@ import java.util.Random;
 import static java.lang.System.getProperty;
 
 public class CreationOfProduct {
-    WebDriver driver = null;
+    EventFiringWebDriver driver = null;
 
     private static final String mCHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final int STR_LENGTH = 9;
@@ -28,7 +29,10 @@ public class CreationOfProduct {
     @BeforeTest
     @Parameters({"browser"})
     public void setBrowser(String browser) {
-        driver = DriverManager.getDriver("browser");
+        driver = new EventFiringWebDriver(DriverManager.getDriver("browser"));
+        MyWebDriverListener listener = new MyWebDriverListener();
+        driver.register(listener);
+
     }
 
 
@@ -80,14 +84,15 @@ public class CreationOfProduct {
         numberField.sendKeys(numberProductString);
 
         int priceProduct10 = random.nextInt(1000) + 1;
-        float priceProduct = priceProduct10 / 10;
+        float priceProduct;
+        priceProduct = (float) priceProduct10 * (float) 0.1 / 100;
         String priceProductString = Float.toString(priceProduct);
         WebElement priceField = driver.findElement(By.id("form_step1_price_shortcut"));
         priceField.clear();
         priceField.sendKeys(priceProductString);
 
-        WebElement swichInput = driver.findElement(By.xpath("//*[@id=\"form\"]/div[4]/div[1]/div"));
-        swichInput.click();
+        WebElement switchInput = driver.findElement(By.xpath("//*[@id=\"form\"]/div[4]/div[1]/div"));
+        switchInput.click();
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("growl-close")));
         WebElement configMessage = driver.findElement(By.className("growl-close"));
