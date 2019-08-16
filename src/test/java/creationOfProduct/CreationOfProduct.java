@@ -1,6 +1,7 @@
 package creationOfProduct;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -10,6 +11,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 import org.testng.annotations.*;
 
 import java.io.File;
@@ -24,6 +26,9 @@ public class CreationOfProduct {
     private static final String mCHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     private static final int STR_LENGTH = 9;
     Random random = new Random();
+    String nameProductString;
+    String numberProductString;
+    String priceProductString;
 
 
     @BeforeTest
@@ -60,7 +65,7 @@ public class CreationOfProduct {
 
         Actions goToProducts = new Actions(driver);
         goToProducts.moveToElement(adminCatalog).pause(Duration.ofSeconds(5)).click(adminProducts).build().perform();
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("product_catalog_list")));
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("page-header-desc-configuration-add")));
 
         WebElement newProductButton = driver.findElement(By.id("page-header-desc-configuration-add"));
         newProductButton.click();
@@ -68,25 +73,21 @@ public class CreationOfProduct {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("form_content")));
 
         WebElement nameField = driver.findElement(By.id("form_step1_name_1"));
-        //Random random = new Random();
 
 
-
-        //int nameProduct = random.nextInt(1000) + 1;
-        //String nameProductString = Integer.toString(nameProduct);
-        String nameProductString = createRandomString();
+        nameProductString = createRandomString();
         nameField.sendKeys(nameProductString);
 
         int numberProduct = random.nextInt(100) + 1;
-        String numberProductString = Integer.toString(numberProduct);
+        numberProductString = Integer.toString(numberProduct);
         WebElement numberField = driver.findElement(By.id("form_step1_qty_0_shortcut"));
         numberField.clear();
         numberField.sendKeys(numberProductString);
 
         int priceProduct10 = random.nextInt(1000) + 1;
         float priceProduct;
-        priceProduct = (float) priceProduct10 * (float) 0.1 / 100;
-        String priceProductString = Float.toString(priceProduct);
+        priceProduct = (float) priceProduct10 * (float) 0.1;
+        priceProductString = Float.toString(priceProduct);
         WebElement priceField = driver.findElement(By.id("form_step1_price_shortcut"));
         priceField.clear();
         priceField.sendKeys(priceProductString);
@@ -98,37 +99,54 @@ public class CreationOfProduct {
         WebElement configMessage = driver.findElement(By.className("growl-close"));
         configMessage.click();
 
-        WebElement saveProductButton = driver.findElement(By.xpath("//*[@id=\"form\"]/div[4]/div[2]/div"));
+        WebElement saveProductButton = driver.findElement(By.xpath("//*[@id=\"submit\"]"));
         saveProductButton.click();
 
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("growl-close")));
-        configMessage = driver.findElement(By.className("growl-close"));
-        configMessage.click();
+        WebElement configMessage2 = driver.findElement(By.className("growl-close"));
+        configMessage2.click();
 
 
 
 
     }
 
-    //@Test(dataProvider = "getData")
-    //public void checkingProduct(String email, String password) {
+    @Test
+    public void checkingProduct() {
 
-        //driver.get("http://prestashop-automation.qatestlab.com.ua/");
+        driver.get("http://prestashop-automation.qatestlab.com.ua/");
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("products")));
 
-        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email")));
+        WebElement allProducts = driver.findElement(By.xpath("//*[@id=\"content\"]/section/a"));
+        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", allProducts);
+        allProducts.click();
 
-        //WebElement loginInput = driver.findElement(By.id("email"));
-        //loginInput.sendKeys(email);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("col-md-6")));
 
-        //WebElement passwordInput = driver.findElement(By.id("passwd"));
-        //passwordInput.sendKeys(password);
+        WebElement nextPage = driver.findElement(By.xpath("//*[@id=\"js-product-list\"]/nav/div[2]/ul/li[5]/a"));
 
-        //WebElement submitButton = driver.findElement(By.name("submitLogin"));
-        //submitButton.click();
+        //WebElement createdProduct = driver.findElement(By.linkText(nameProductString));
+        //createdProduct.click();
+
+        if(elemetIsPresent(By.linkText(nameProductString))) {
+            //((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.linkText("Faded Short Sleeve T-Shirts")));
+            driver.findElement(By.linkText(nameProductString)).click();
+        }
+        else {
+            //((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", nextPage);
+            //wait.until(ExpectedConditions.elementToBeClickable(nextPage));
+            nextPage.click();
+        }
+        //else {
+            //System.out.println("There is no such product");
+        //}
 
 
-    //}
+
+
+    }
 
     //@AfterTest
     //public void closeBrowser() {
@@ -149,6 +167,10 @@ public class CreationOfProduct {
             builder.append(ch);
         }
         return builder.toString();
+    }
+
+    public boolean elemetIsPresent(By by){
+        return driver.findElements(by).size() > 0;
     }
 
 

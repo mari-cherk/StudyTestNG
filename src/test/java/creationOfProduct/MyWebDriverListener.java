@@ -20,12 +20,12 @@ public class MyWebDriverListener extends AbstractWebDriverEventListener {
 
     @Override
     public void beforeChangeValueOf(WebElement element, WebDriver driver, CharSequence[] keysToSend) {
-        Reporter.log("Typing text: "+keysToSend,true);
+        Reporter.log("Typing text to "+element,true);
     }
 
     @Override
     public void afterChangeValueOf(WebElement element, WebDriver driver, CharSequence[] keysToSend) {
-        Reporter.log(keysToSend+" - value set to the field",true);
+        Reporter.log("value set to the"+element+" field",true);
     }
 
     @Override
