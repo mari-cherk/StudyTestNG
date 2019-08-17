@@ -35,6 +35,6 @@ public class MyWebDriverListener extends AbstractWebDriverEventListener {
 
     @Override
     public void afterClickOn(WebElement element, WebDriver driver) {
-        Reporter.log(element+" element was clicked",true);
+        Reporter.log(" element was clicked",true);
     }
 }

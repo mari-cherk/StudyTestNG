@@ -99,7 +99,7 @@ public class CreationOfProduct {
         WebElement configMessage = driver.findElement(By.className("growl-close"));
         configMessage.click();
 
-        WebElement saveProductButton = driver.findElement(By.xpath("//*[@id=\"submit\"]"));
+        WebElement saveProductButton = driver.findElement(By.xpath("//button[@class=\"btn btn-primary js-btn-save\"]"));
         saveProductButton.click();
 
 
@@ -113,7 +113,7 @@ public class CreationOfProduct {
     }
 
     @Test
-    public void checkingProduct() {
+    public void checkingProduct() throws InterruptedException {
 
         driver.get("http://prestashop-automation.qatestlab.com.ua/");
         WebDriverWait wait = new WebDriverWait(driver, 10);
@@ -125,23 +125,33 @@ public class CreationOfProduct {
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("col-md-6")));
 
-        WebElement nextPage = driver.findElement(By.xpath("//*[@id=\"js-product-list\"]/nav/div[2]/ul/li[5]/a"));
+        //WebElement nextPage = driver.findElement(By.xpath("//*[@class=\"next disabled js-search-link\"]"));
 
         //WebElement createdProduct = driver.findElement(By.linkText(nameProductString));
         //createdProduct.click();
 
-        if(elemetIsPresent(By.linkText(nameProductString))) {
+        while(!elemetIsPresent(By.linkText(nameProductString))){
+            if(elemetIsPresent(By.xpath("//*[@class=\"next js-search-link\"]"))) {
             //((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.linkText("Faded Short Sleeve T-Shirts")));
-            driver.findElement(By.linkText(nameProductString)).click();
+            driver.findElement(By.xpath("//*[@class=\"next js-search-link\"]")).click();
+        Thread.sleep(5000);
+
+           }
         }
-        else {
-            //((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", nextPage);
-            //wait.until(ExpectedConditions.elementToBeClickable(nextPage));
-            nextPage.click();
-        }
-        //else {
-            //System.out.println("There is no such product");
-        //}
+        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText(nameProductString)));
+        //Thread.sleep(5000);
+        WebElement createdProduct = driver.findElement(By.linkText(nameProductString));
+        createdProduct.click();
+
+        String getNameOfproduct = driver.findElement(By.xpath("//*[@class=\"h1\"]")).getText();
+        System.out.println(getNameOfproduct);
+
+        String getPriceOfProduct = driver.findElement(By.xpath("//span[@itemprop=\"price\"]")).getAttribute("content");
+        System.out.println(getPriceOfProduct);
+
+        String getNumberOfProduct = driver.findElement(By.xpath("//input[@name=\"qty\"]")).getAttribute("value");
+        System.out.println(getNameOfproduct);
+
 
 
 
