@@ -112,7 +112,7 @@ public class CreationOfProduct {
 
     }
 
-    @Test
+    @Test(dependsOnMethods = "addingProduct")
     public void checkingProduct() throws InterruptedException {
 
         driver.get("http://prestashop-automation.qatestlab.com.ua/");
@@ -125,43 +125,35 @@ public class CreationOfProduct {
 
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.className("col-md-6")));
 
-        //WebElement nextPage = driver.findElement(By.xpath("//*[@class=\"next disabled js-search-link\"]"));
-
-        //WebElement createdProduct = driver.findElement(By.linkText(nameProductString));
-        //createdProduct.click();
-
         while(!elemetIsPresent(By.linkText(nameProductString))){
             if(elemetIsPresent(By.xpath("//*[@class=\"next js-search-link\"]"))) {
-            //((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", driver.findElement(By.linkText("Faded Short Sleeve T-Shirts")));
             driver.findElement(By.xpath("//*[@class=\"next js-search-link\"]")).click();
-        Thread.sleep(5000);
+        Thread.sleep(3000);
 
            }
         }
-        //wait.until(ExpectedConditions.visibilityOfElementLocated(By.linkText(nameProductString)));
-        //Thread.sleep(5000);
+
         WebElement createdProduct = driver.findElement(By.linkText(nameProductString));
         createdProduct.click();
 
         String getNameOfproduct = driver.findElement(By.xpath("//*[@class=\"h1\"]")).getText();
         System.out.println(getNameOfproduct);
+        Assert.assertEquals(getNameOfproduct, nameProductString, "Wrong name");
 
         String getPriceOfProduct = driver.findElement(By.xpath("//span[@itemprop=\"price\"]")).getAttribute("content");
         System.out.println(getPriceOfProduct);
+        Assert.assertEquals(getPriceOfProduct, priceProductString, "Wrong price");
 
-        String getNumberOfProduct = driver.findElement(By.xpath("//input[@name=\"qty\"]")).getAttribute("value");
-        System.out.println(getNameOfproduct);
-
-
-
-
+        String numberOfProduct = driver.findElement(By.xpath("//*[@id=\"product-details\"]/div[1]/span")).getText().replaceAll("\\D", "");
+        System.out.println(numberOfProduct);
+        Assert.assertEquals(numberProductString, numberOfProduct, "Wrong number of products");
 
     }
 
-    //@AfterTest
-    //public void closeBrowser() {
-        //driver.quit();
-    //}
+    @AfterTest
+    public void closeBrowser() {
+        driver.quit();
+    }
 
 
     @DataProvider
