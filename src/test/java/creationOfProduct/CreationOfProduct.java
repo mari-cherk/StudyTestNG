@@ -99,7 +99,7 @@ public class CreationOfProduct {
         WebElement configMessage = driver.findElement(By.className("growl-close"));
         configMessage.click();
 
-        WebElement saveProductButton = driver.findElement(By.xpath("//button[@class=\"btn btn-primary js-btn-save\"]"));
+        WebElement saveProductButton = driver.findElement(By.xpath("//input[@class=\"btn btn-primary save uppercase\"]"));
         saveProductButton.click();
 
 
